@@ -1,0 +1,70 @@
+import mongoose, { Document, Schema } from "mongoose";
+
+interface IHotel {
+  name: string;
+  type: string;
+  city: string;
+  address: string;
+  distance: string;
+  photos: [string];
+  title: string;
+  desc: string;
+  rating: number;
+  rooms: [string];
+  cheapest: number;
+  featured: boolean;
+}
+
+interface IHotelModel extends IHotel, Document {}
+
+const HotelSchema: Schema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    required: true,
+  },
+  city: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  distance: {
+    type: String,
+    required: true,
+  },
+  photos: {
+    type: [String],
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  desc: {
+    type: String,
+    required: true,
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 5,
+  },
+  rooms: {
+    type: [String],
+  },
+  cheapest: {
+    type: Number,
+    required: true,
+  },
+  featured: {
+    type: Boolean,
+    default: false,
+  },
+});
+
+export default mongoose.model<IHotelModel>("Hotel", HotelSchema);
