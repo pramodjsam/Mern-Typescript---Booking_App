@@ -54,7 +54,7 @@ export const getHotel = async (
 ) => {
   try {
     const hotel = await Hotel.findOne({ _id: req.params.id });
-    res.status(200).json(hotel);
+    res.status(200).json([hotel]);
   } catch (error) {
     next(error);
   }
@@ -65,8 +65,13 @@ export const getAllHotel = async (
   res: Response,
   next: NextFunction
 ) => {
+  // const limit: number = req.query.limit! as unknown as number;
+  const { limit, min, max, ...others } = req.query;
   try {
-    const hotels = await Hotel.find({});
+    const hotels = await Hotel.find({
+      ...others,
+      cheapest: { $gt: min || 1, $lt: max || 999 },
+    }).limit(limit as unknown as number);
     res.status(200).json(hotels);
   } catch (error) {
     next(error);
@@ -84,6 +89,30 @@ export const countByCities = async (
       cities.map((city) => Hotel.countDocuments({ city }))
     );
     res.status(200).json(list);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const countByTypes = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const hotelCount = await Hotel.countDocuments({ type: "hotel" });
+    const apartmentCount = await Hotel.countDocuments({ type: "apartment" });
+    const resortCount = await Hotel.countDocuments({ type: "resort" });
+    const villaCount = await Hotel.countDocuments({ type: "villa" });
+    const cabinCount = await Hotel.countDocuments({ type: "cabin" });
+
+    res.status(200).json([
+      { type: "hotel", count: hotelCount },
+      { type: "apartment", count: apartmentCount },
+      { type: "resort", count: resortCount },
+      { type: "villa", count: villaCount },
+      { type: "cabin", count: cabinCount },
+    ]);
   } catch (error) {
     next(error);
   }
