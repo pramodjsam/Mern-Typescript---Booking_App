@@ -5,12 +5,13 @@ import {
   faLocationDot,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useLocation } from "react-router";
 import Footer from "../../components/footer/Footer";
 import Header from "../../components/header/Header";
 import MailList from "../../components/mailList/MailList";
 import Navbar from "../../components/navbar/Navbar";
+import { SearchContext } from "../../context/SearchContext";
 import useFetch from "../../hooks/useFetch";
 import { IHotel } from "../list/List";
 import "./hotel.scss";
@@ -21,7 +22,17 @@ const Hotel = () => {
   const [sliderNumber, setSliderNumber] = useState(0);
   const [open, setOpen] = useState(false);
   let { data, loading } = useFetch<IHotel>(`/hotels/find/${pathname}`);
-  console.log(data);
+  const { dates, options } = useContext(SearchContext);
+
+  function dateDifference(date1: Date, date2: Date) {
+    const MILLI_SECOND_PER_DAY = 1000 * 60 * 60 * 24;
+    const timeDiff = Math.abs(date2.getTime() - date1.getTime());
+    const diffDays = Math.ceil(timeDiff / MILLI_SECOND_PER_DAY);
+    return diffDays;
+  }
+
+  const days = dateDifference(dates[0]?.endDate, dates[0]?.startDate);
+
   const photos = [
     {
       src: "https://cf.bstatic.com/xdata/images/hotel/max1280x900/261707778.jpg?k=56ba0babbcbbfeb3d3e911728831dcbc390ed2cb16c51d88159f82bf751d04c6&o=&hp=1",
@@ -134,7 +145,8 @@ const Hotel = () => {
                       excellent location score of 9.8!
                     </span>
                     <h2>
-                      <b>$945</b> (9 nights)
+                      <b>${days * data[0].cheapest * options.room}</b> ({days}{" "}
+                      nights)
                     </h2>
                     <button>Reserve or Book Now!</button>
                   </div>
