@@ -7,19 +7,22 @@ import {
   faTaxi,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { DateRange } from "react-date-range";
 import { format } from "date-fns";
 import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import "./header.scss";
 import { useNavigate } from "react-router";
+import { SearchContext } from "../../context/SearchContext";
+import { AuthContext } from "../../context/AuthContext";
 
 interface HeaderProps {
   type?: "list";
 }
 
 const Header: React.FC<HeaderProps> = ({ type }) => {
+  const { user } = useContext(AuthContext);
   const [destination, setDestination] = useState("");
   const [openDate, setOpenDate] = useState(false);
   const [openOptions, setOpenOptions] = useState(false);
@@ -36,11 +39,16 @@ const Header: React.FC<HeaderProps> = ({ type }) => {
     },
   ]);
   const navigate = useNavigate();
+  const { dispatch } = useContext(SearchContext);
 
   const handleOption = (
     name: "adult" | "children" | "room",
     operation: "i" | "d"
   ) => {
+    dispatch!({
+      type: "NEW_SEARCH",
+      payload: { city: destination, dates: date, options },
+    });
     setOptions((prev) => {
       return {
         ...prev,
@@ -97,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({ type }) => {
               Get rewarded for your travels - unlock instant savings of 10% or
               more with a free boooking account
             </p>
-            <button className="headerBtn">Sign in / Register</button>
+            {!user && <button className="headerBtn">Sign in / Register</button>}
             <div className="headerSearch">
               <div className="headerSearchItem">
                 <FontAwesomeIcon icon={faBed} className="headerIcon" />
@@ -195,7 +203,7 @@ const Header: React.FC<HeaderProps> = ({ type }) => {
                         </span>
                         <button
                           className="optionCounterButton"
-                          onClick={() => handleOption("room", "d")}
+                          onClick={() => handleOption("room", "i")}
                         >
                           +
                         </button>
