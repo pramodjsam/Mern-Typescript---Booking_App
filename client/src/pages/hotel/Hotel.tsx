@@ -6,11 +6,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState } from "react";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import Footer from "../../components/footer/Footer";
 import Header from "../../components/header/Header";
 import MailList from "../../components/mailList/MailList";
 import Navbar from "../../components/navbar/Navbar";
+import Reserve from "../../components/reserve/Reserve";
+import { AuthContext } from "../../context/AuthContext";
 import { SearchContext } from "../../context/SearchContext";
 import useFetch from "../../hooks/useFetch";
 import { IHotel } from "../list/List";
@@ -21,8 +23,11 @@ const Hotel = () => {
   const pathname = location.pathname.split("/")[2];
   const [sliderNumber, setSliderNumber] = useState(0);
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   let { data, loading } = useFetch<IHotel>(`/hotels/find/${pathname}`);
   const { dates, options } = useContext(SearchContext);
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   function dateDifference(date1: Date, date2: Date) {
     const MILLI_SECOND_PER_DAY = 1000 * 60 * 60 * 24;
@@ -71,6 +76,14 @@ const Hotel = () => {
     }
 
     setSliderNumber(newSlideNumber);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (user) {
+      setOpenModal(true);
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -148,7 +161,7 @@ const Hotel = () => {
                       <b>${days * data[0].cheapest * options.room}</b> ({days}{" "}
                       nights)
                     </h2>
-                    <button>Reserve or Book Now!</button>
+                    <button onClick={handleClick}>Reserve or Book Now!</button>
                   </div>
                 </div>
               </div>
@@ -156,6 +169,7 @@ const Hotel = () => {
               <Footer />
             </div>
           )}
+      {openModal && <Reserve hotelId={pathname} setOpen={setOpenModal} />}
     </div>
   );
 };
