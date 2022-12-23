@@ -1,9 +1,18 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-const useFetch = (url: string) => {
+interface UseFetchResult<T> {
+  error: any;
+  data: T[];
+  loading: boolean;
+  reFetchData: () => Promise<void>;
+}
+
+type UseFetchMethod = <T>(url: string) => UseFetchResult<T>;
+
+const useFetch: UseFetchMethod = (url: string) => {
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {

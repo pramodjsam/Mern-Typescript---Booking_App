@@ -12,6 +12,11 @@
     align-items: center;
     justify-content: space-between;
 
+    & > a {
+      color: white;
+      text-decoration: none;
+    }
+
     .logo {
       font-weight: 500;
     }
