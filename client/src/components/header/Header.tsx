@@ -45,10 +45,6 @@ const Header: React.FC<HeaderProps> = ({ type }) => {
     name: "adult" | "children" | "room",
     operation: "i" | "d"
   ) => {
-    dispatch!({
-      type: "NEW_SEARCH",
-      payload: { city: destination, dates: date, options },
-    });
     setOptions((prev) => {
       return {
         ...prev,
@@ -58,6 +54,10 @@ const Header: React.FC<HeaderProps> = ({ type }) => {
   };
 
   const handleSearch = () => {
+    dispatch!({
+      type: "NEW_SEARCH",
+      payload: { city: destination, dates: date, options },
+    });
     navigate("/hotel", {
       state: {
         destination,

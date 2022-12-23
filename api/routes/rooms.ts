@@ -5,6 +5,7 @@ import {
   getAllRoom,
   getRoom,
   updateRoom,
+  updateRoomAvailability,
 } from "../controllers/roomController";
 import { verifyAdmin } from "../utils/verifyToken";
 
@@ -24,5 +25,7 @@ router.get("/:id", getRoom);
 
 //Get all
 router.get("/", getAllRoom);
+
+router.put("/availability/:id", updateRoomAvailability);
 
 export default router;
