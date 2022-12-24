@@ -13,11 +13,14 @@ export const register = async (
   next: NextFunction
 ) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, country, city, phone } = req.body;
     const newUser = new User({
       username,
       email,
       password,
+      country,
+      city,
+      phone,
     });
     await newUser.save();
     res.status(201).json(newUser);
@@ -49,7 +52,7 @@ export const login = async (
     res
       .cookie("access_token", token, { httpOnly: true })
       .status(200)
-      .json(otherDetails);
+      .json({ details: { ...otherDetails }, isAdmin });
   } catch (error) {
     next(error);
   }

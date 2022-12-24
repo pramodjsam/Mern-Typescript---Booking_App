@@ -1,7 +1,8 @@
-import axios from "axios";
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import axios from "axios";
 import "./login.scss";
+import { useNavigate } from "react-router";
 
 const Login = () => {
   const [credentials, setCredentials] = useState<{
@@ -12,6 +13,7 @@ const Login = () => {
     password: undefined,
   });
   const { loading, error, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -23,7 +25,15 @@ const Login = () => {
     dispatch!({ type: "LOGIN_START" });
     try {
       const res = await axios.post("/auth/login", credentials);
-      dispatch!({ type: "LOGIN_SUCCESS", payload: res.data.details });
+      if (res.data.isAdmin) {
+        dispatch!({ type: "LOGIN_SUCCESS", payload: res.data.details });
+        navigate("/");
+      } else {
+        dispatch!({
+          type: "LOGIN_FAILURE",
+          payload: "You are not allowed",
+        });
+      }
     } catch (error) {
       let errorMessage = "Failed to do something exceptional";
       if (error instanceof Error) {
