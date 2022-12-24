@@ -4,6 +4,10 @@ import bcrypt from "bcryptjs";
 interface IUser {
   username: string;
   email: string;
+  country: string;
+  img: string;
+  city: string;
+  phone: string;
   password: string;
   isAdmin: boolean;
 }
@@ -27,6 +31,19 @@ const UserSchema: Schema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    img: { type: String },
+    city: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
     },
     password: {
       type: String,
