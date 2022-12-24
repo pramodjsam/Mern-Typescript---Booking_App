@@ -73,6 +73,7 @@ const Reserve: React.FC<IReserve> = ({ setOpen, hotelId }) => {
           const res = axios.put(`/rooms/availability/${roomId}`, {
             dates: allDates,
           });
+          return res;
         })
       );
     } catch (error) {}
