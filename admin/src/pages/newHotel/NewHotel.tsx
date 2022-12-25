@@ -70,7 +70,7 @@ const NewHotel = () => {
         Object.values(files).map(async (file: IFile | any): Promise<string> => {
           const data = new FormData();
           data.append("file", file!);
-          data.append("api_key", "E8ld6i8qRjVV2pXDvHoabhQlXLs");
+          data.append("api_key", "<INSERT_YOUR_API>");
           data.append("upload_preset", "vuihjy42");
           const uploadRes = await axios.post(
             "https://api.cloudinary.com/v1_1/cserver/image/upload",
