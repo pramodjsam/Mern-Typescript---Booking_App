@@ -42,7 +42,7 @@ const New: React.FC<NewProps> = ({ inputs, title }) => {
     e.preventDefault();
     const data = new FormData();
     data.append("file", file!);
-    data.append("api_key", "E8ld6i8qRjVV2pXDvHoabhQlXLs");
+    data.append("api_key", "<INSERT_YOUR_API>");
     data.append("upload_preset", "vuihjy42");
     try {
       const uploadRes = await axios.post(
